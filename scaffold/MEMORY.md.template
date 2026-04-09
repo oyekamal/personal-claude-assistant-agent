@@ -1,0 +1,34 @@
+# Memory Index
+
+This file is an index of all memory files in the `memory/` directory. Each line points to a memory file that helps your assistant understand your context, preferences, and work patterns.
+
+**Memory persists across sessions.** Use it for:
+- Your profile (role, expertise, preferences)
+- Validated approaches (what works, why)
+- Project context (ongoing work, deadlines, dependencies)
+- External references (where to find information)
+
+See guides/02-memory-system.md for comprehensive guidance.
+
+## User Profile
+
+- [Your Role and Expertise](memory/user_profile.md) — Your background, role, technical depth
+
+## Feedback & Patterns
+
+- [Validated Approaches](memory/feedback_patterns.md) — What works for you, what to avoid
+
+## Project Context
+
+- [Current Projects](memory/projects.md) — Ongoing work, deadlines, stakeholders
+- [Workspace Setup](memory/workspace.md) — Your agent configuration and tools
+
+## External References
+
+- [Communication Channels](memory/references.md) — Where to find info (Jira, Slack, docs)
+
+---
+
+**New memory?** Create a file in `memory/` and add a link here.
+
+**See also**: CLAUDE.md, guides/02-memory-system.md, logs/

@@ -1,0 +1,59 @@
+# Daily Standup
+
+**Today's date**: [DATE]
+
+## Carry-Overs from Yesterday
+
+- [ ] [Task from previous session that needs continuation]
+- [ ] [Another carry-over]
+
+## Focus Today
+
+What are you prioritizing today?
+
+- **Primary**: [Main task or theme]
+- **Secondary**: [Supporting work]
+- **If time**: [Nice-to-have]
+
+## Known Blockers
+
+- [Any blockers from yesterday]
+- [Dependencies waiting on others]
+
+## Session Goals
+
+By end of today:
+- [ ] [Goal 1]
+- [ ] [Goal 2]
+
+---
+
+## Session Log
+
+*Append to this as you work — don't wait until end of session.*
+
+### HH:MM — [What you worked on]
+
+- Result: [Outcome]
+- Time: [Duration]
+
+---
+
+## End of Session Summary
+
+**What got done today:**
+- [Completed item 1]
+- [Completed item 2]
+
+**What carries over:**
+- [ ] [Task to continue tomorrow]
+
+**Notes for next session:**
+- [Context to remember]
+
+**Lessons learned:**
+- [Any patterns to capture in memory?]
+
+---
+
+*See CLAUDE.md for logging discipline and verification before done.*

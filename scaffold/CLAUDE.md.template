@@ -1,0 +1,253 @@
+# Personal Claude Assistant Agent
+
+This file controls your assistant's startup behavior, project workflows, logging discipline, and error recovery patterns.
+
+When you open this workspace in Claude Code, the assistant reads CLAUDE.md to understand:
+- What runs at session start (email, memory, logging)
+- How to handle your projects (commands, MCP servers)
+- How to approach work (planning, verification, logging)
+- How to handle failures (escalation, blockers)
+
+**See guides/**: Read the accompanying guides to understand each section.
+
+---
+
+## Auto-Start Behavior
+
+At the beginning of every session:
+
+1. Invoke the `morning-standup` skill — read memory, show daily status snapshot
+2. Read Gmail for your email address — fetch messages from last 24 hours
+3. Update work logs with anything new from email
+4. Update contacts — add/update any new senders
+5. Flag emails needing reply or action — present to you with suggested response
+6. Ask for approval before sending any emails
+
+**How to customize:** Add new auto-start tasks relevant to your role. For example:
+- Slack channel summary
+- Jira ticket sweep
+- Calendar review
+- Deployment status check
+
+---
+
+## Project-Specific Workflows
+
+Your assistant knows how to work within each of your projects. Each project gets:
+- A dedicated command (`/project-dev`, `/project-test`)
+- Configured MCP servers
+- Custom error handling
+- Environment setup
+
+### EXAMPLE: Taleemabad CMS (React Frontend)
+
+**Location**: `repos/taleemabad-cms/`
+**Tech**: Vite + React 19 + TypeScript + TailwindCSS
+**Type**: Content management SPA
+
+**Commands**:
+- `/cms-dev` — Start dev server, verify environment, type-check
+- `/cms-test` — Type-check, linting, build validation
+
+**Key Features**:
+- S3 presigned URL uploads
+- Media asset management
+- Training CRUD with asset linking
+- Quiz builder
+
+**When you're working on CMS**: The assistant knows to check `repos/taleemabad-cms/.claude/QUICK-REF.md` for patterns, use the React agent, and verify builds before committing.
+
+### EXAMPLE: Taleemabad Core (Django Backend)
+
+**Location**: `/home/oye/Documents/taleemabad-core` (NOT in repos/)
+**Tech**: Django + PostgreSQL + DRF + Celery
+**Type**: Training LMS backend
+
+**Commands**:
+- `/feature [name]` — Start feature (planning, TDD, migrations)
+- `/fix [issue]` — Debug and fix bug
+- `/test` — Run test suite
+- `/deploy [staging|prod]` — Deploy to environment
+
+**Key Responsibilities**:
+- Training management (levels, quizzes, progress)
+- User management (auth, roles, permissions)
+- Media assets (S3 integration, presigned URLs)
+- Background jobs (Celery for async tasks)
+
+**When you're working on Core**: The assistant knows Django patterns, checks migrations carefully, runs tests before committing, and flags breaking changes.
+
+### TEMPLATE: Your Project Here
+
+**Location**: [your repo path]
+**Tech**: [your stack]
+**Type**: [what it does]
+
+**Commands**:
+- `/project-dev` — Start development
+- `/project-test` — Validate before commit
+
+**Key Features**:
+- [Feature 1]
+- [Feature 2]
+- [Feature 3]
+
+**When you're working on this project**: The assistant should [your specific patterns and conventions].
+
+---
+
+## Workflow Orchestration
+
+How you and your assistant approach work together.
+
+### 1. Plan Node Default
+
+**Enter plan mode for ANY non-trivial task** (3+ steps or architectural decisions).
+
+- If something goes sideways → STOP and re-plan immediately (don't keep pushing)
+- Use plan mode for verification steps, not just building
+- Write detailed specs upfront to reduce ambiguity
+
+### 2. Subagent Strategy
+
+- Use subagents liberally to keep main context clean
+- Offload research, exploration, and parallel analysis
+- For complex problems, throw more compute at it via subagents
+- One task per subagent for focused execution
+
+### 3. Self-Improvement Loop
+
+- After ANY correction from you → update memory/lessons.md with the pattern
+- Write rules for yourself that prevent the same mistake
+- Ruthlessly iterate on lessons until mistake rate drops
+- Review lessons at session start for relevant project
+
+### 4. Verification Before Done
+
+- Never mark a task complete without proving it works
+- Diff behavior between main and changes when relevant
+- Ask: "Would a staff engineer approve this?"
+- Run tests, check logs, demonstrate correctness
+
+### 5. Demand Elegance (Balanced)
+
+- For non-trivial changes: pause and ask "is there a more elegant way?"
+- If a fix feels hacky → "Knowing everything I know now, implement the elegant solution"
+- Skip this for simple, obvious fixes (don't over-engineer)
+- Challenge your own work before presenting it
+
+### 6. Autonomous Bug Fixing
+
+When given a bug report: just fix it. Don't ask for hand-holding.
+
+- Point at logs, errors, failing tests → resolve them
+- Zero context switching required
+- Fix failing CI tests without being told how
+
+---
+
+## Task Management
+
+How to track progress and stay organized.
+
+### 1. Plan First
+Write plan to tasks/todo.md with checkable items before starting.
+
+### 2. Track Progress
+Mark items complete as you go. Don't batch updates.
+
+### 3. Verify Before Done
+- Tests pass (or justified why not needed)
+- No breaking changes
+- Code follows project conventions
+- Changes only touch what's necessary
+
+### 4. Document Results
+Add review section to tasks/todo.md after completing.
+
+### 5. Capture Lessons
+Update memory/lessons.md after corrections or discoveries.
+
+---
+
+## Logging Discipline
+
+**Write logs immediately, not at the end of the session.**
+
+This is non-negotiable. If you skip logging mid-session, the session becomes unrecoverable.
+
+### Format
+
+Append to `logs/YYYY-MM-DD.md` after each meaningful action:
+
+```markdown
+- HH:MM — [one line: what happened]
+```
+
+**Meaningful Action**:
+- File edited or created in `domains/`, `plans/`, `skills/`, or `repos/`
+- Email drafted or sent
+- Decision made or task completed
+- Contact file created or updated
+- Jira ticket created
+- Code written or reviewed
+
+### End of Session
+
+Always commit changes:
+
+```bash
+git add -A && git commit -m "log: session YYYY-MM-DD"
+```
+
+---
+
+## Error Recovery & Escalation
+
+How to handle failures gracefully.
+
+### When Things Fail
+
+- **Tool denied**: Explain why, ask for permission, do NOT retry silently
+- **Test failure**: Diagnose root cause before re-running
+- **Git conflict**: Resolve thoughtfully, don't force-push
+- **API timeout**: Check logs, retry once, escalate if persistent
+- **Blocking issue**: If >2 attempts fail, escalate with full diagnosis
+
+### Communication Cadence
+
+- **Long research** (>15 min): Brief status — "Investigating X, found Y so far"
+- **Waiting for input**: Explicit ask with deadline
+- **Stuck >30min**: Re-plan or escalate — don't spin silently
+
+---
+
+## Core Principles
+
+**Simplicity First**: Make every change as simple as possible. Impact minimal code.
+
+**No Laziness**: Find root causes. No temporary fixes. Senior developer standards.
+
+**Minimal Impact**: Changes should only touch what's necessary. Avoid introducing bugs.
+
+**Verification Before Done**: Never mark a task complete without proving it works. Would a staff engineer approve this?
+
+**Demand Elegance (Balanced)**: For non-trivial changes, pause and ask "is there a more elegant way?" Skip this for simple, obvious fixes—don't over-engineer.
+
+**Autonomous Bug Fixing**: When given a bug report, just fix it. Point at logs → diagnose → resolve. Zero context-switching required.
+
+---
+
+## Key Files
+
+- `MEMORY.md` — Index of all memory files (user, feedback, project, reference)
+- `STANDUP.md` — Daily carry-overs, today's focus
+- `logs/` — Daily session logs (create YYYY-MM-DD.md each session)
+- `memory/` — Context that persists across sessions
+- `domains/` — Work area tracking (work, fitness, projects, etc.)
+- `skills/` — Custom automation (optional)
+- `plans/` — Planning docs (optional)
+
+---
+
+**Next**: Read [guides/01-setup.md](../guides/01-setup.md) to customize this file for your work.
